@@ -1,32 +1,54 @@
-interface ProjectCardProps {
+"use client";
+
+import { Card, Button } from "antd";
+import { useCart } from "@/context/CartContext";
+
+interface Props {
   title: string;
   description: string;
-  tech: string;
-  imagePath: string; // Đây là đường dẫn ảnh truyền từ page.tsx sang
+  price: string;
+  imagePath: string;
 }
 
-export default function ProjectCard({ title, description, tech, imagePath }: ProjectCardProps) {
-  return (
-    <div className="bg-white rounded-4xl border-2 border-black overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col h-full">
-      {/* KHUNG ẢNH */}
-      <div className="h-48 w-full border-b-2 border-black overflow-hidden bg-gray-100">
-        <img
-          src={imagePath}
-          alt={title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-        />
-      </div>
+export default function ProjectCard({
+  title,
+  description,
+  price,
+  imagePath,
+}: Props) {
+  const { addToCart } = useCart();
 
-      {/* NỘI DUNG */}
-      <div className="p-6 flex flex-col grow">
-        <h3 className="text-xl font-bold mb-2 text-black">{title}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3 grow">{description}</p>
-        <div className="mt-auto">
-          <span className="inline-block px-3 py-1 border border-black rounded-full text-xs font-bold text-black bg-blue-50">
-            {tech}
-          </span>
-        </div>
-      </div>
-    </div>
+  return (
+    <Card
+      hoverable
+      cover={
+        <img
+          alt={title}
+          src={imagePath}
+          style={{ height: 250, objectFit: "cover" }}
+        />
+      }
+    >
+      <h2>{title}</h2>
+
+      <p>{description}</p>
+
+      <h3 style={{ color: "red" }}>{price}</h3>
+
+      <Button
+        type="primary"
+        onClick={() =>
+          addToCart({
+            id: title,
+            name: title,
+            price: parseFloat(price),
+            quantity: 1,
+            image: imagePath,
+          })
+        }
+      >
+        Thêm vào giỏ hàng
+      </Button>
+    </Card>
   );
 }
